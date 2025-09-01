@@ -1,21 +1,37 @@
+//
+//  EmailWrapper.swift
+//  AssignmentFreelance
+//
+//  Created by dilshad haidari on 24/08/25.
+//
+
+import Foundation
+import Combine
+
 @propertyWrapper
-struct EmailWrapper {
-    var wrappedValue: String
-    private var value : String = ""
+class EmailWrapper {
+    private var subject: CurrentValueSubject<String, Never>
+    
+    var wrappedValue: String {
+        get { subject.value }
+        set { subject.send(newValue) }
+    }
+    
+    /// Expose a Publisher for the raw email string
+    var projectedValue: AnyPublisher<String, Never> {
+        subject.eraseToAnyPublisher()
+    }
     
     init(wrappedValue: String) {
-        self.value = wrappedValue
+        self.subject = CurrentValueSubject<String, Never>(wrappedValue)
     }
     
-    var projectedValue: Bool {
-        return Self.isValid(value)
-    }
-    
-    private static func isValid(_ email: String) -> Bool {
-        let emailRegex = #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"#
-        let predicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        return predicate.evaluate(with: email)
+    /// Email validation logic
+    static func isValid(_ email: String) -> Bool {
+        let regex = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
+        return email.range(of: regex, options: .regularExpression) != nil
     }
     
     
 }
+

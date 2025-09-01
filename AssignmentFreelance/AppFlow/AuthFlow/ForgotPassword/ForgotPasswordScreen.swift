@@ -1,3 +1,12 @@
+//
+//  ForgotPasswordScreen.swift
+//  AssignmentFreelance
+//
+//  Created by dilshad haidari on 27/08/25.
+//
+
+import SwiftUI
+
 struct ForgotPasswordScreen: View {
     
     @EnvironmentObject var router: Router<AuthFlow>

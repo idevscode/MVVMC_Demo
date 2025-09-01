@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var appCoordinator: AppCoordinator
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+          Group {
+            switch appCoordinator.currentFlow {
+            case .auth:
+                AuthFlowView()
+            case .main:
+                MainFlowView()
+          }
         }
-        .padding()
     }
-}
-
-#Preview {
-    ContentView()
 }
